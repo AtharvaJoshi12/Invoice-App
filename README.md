@@ -36,6 +36,3 @@ The Invoice Creation Program is a web application designed to simplify the proce
 4. **Generate Invoice**: Click the "Generate Invoice" button to process and save the invoice data.
 5. **Use Dummy Data**: Click the "Use Dummy Data" button to quickly populate the form with example values.
 
-### Links
-
-- **Deployed Application**: [View Live Application]([https://atharvajoshi12.github.io/Invoice-App])
