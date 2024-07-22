@@ -38,5 +38,4 @@ The Invoice Creation Program is a web application designed to simplify the proce
 
 ### Links
 
-- **GitHub Repository**: [Invoice Creation Program GitHub](https://github.com/yourusername/invoice-creation-program)
-- **Deployed Application**: [View Live Application](https://your-deployment-link.com)
+- **Deployed Application**: [View Live Application]([https://your-deployment-link.com](https://atharvajoshi12.github.io/Invoice-App))
