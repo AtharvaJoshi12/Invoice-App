@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Invoice</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      .container {
+        max-width: 800px;
+        margin: auto;
+        padding: 30px;
+        border: 1px solid #ccc;
+      }
+      .invoice-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .invoice-header img {
+        max-width: 150px;
+      }
+      .invoice-details,
+      .billing-details,
+      .shipping-details,
+      .items-table,
+      .total,
+      .footer {
+        margin-top: 20px;
+      }
+      .items-table table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .items-table table,
+      .items-table th,
+      .items-table td {
+        border: 1px solid black;
+      }
+      .items-table th,
+      .items-table td {
+        padding: 8px;
+        text-align: left;
+      }
+      .no-print {
+        display: block;
+        margin: 20px 0;
+      }
+      .downloadBtn {
+        width: 100%;
+        background-color: rgb(51, 136, 248);
+        padding: 20px;
+        border-radius: 10px;
+        border: none;
+        font-size: 16px;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .downloadBtn:hover {
+        background-color: rgb(89, 149, 226);
+      }
+      @media print {
+        .no-print {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="invoice-header">
+        <img id="company_logo" src="" alt="Company Logo" />
+        <div>
+          <h2>Tax Invoice/Bill of Supply/Cash Memo</h2>
+          <p>(Original for Recipient)</p>
+        </div>
+      </div>
+      <div class="invoice-details">
+        <p><strong>Sold By:</strong> <span id="seller_name"></span></p>
+        <p id="seller_address"></p>
+        <p style="font-weight: bold">
+          PAN No: <span style="font-weight: 100" id="seller_pan"></span>
+        </p>
+        <p style="font-weight: bold">
+          GST Registration No:
+          <span style="font-weight: 100" id="seller_gst"></span>
+        </p>
+      </div>
+      <div class="billing-details">
+        <h3>Billing Address:</h3>
+        <p><span id="billing_name"></span></p>
+        <p id="billing_address"></p>
+        <p style="font-weight: bold">
+          Place of Supply:
+          <span style="font-weight: 100" id="place_of_supply"></span>
+        </p>
+        <p style="font-weight: bold">
+          Place of Delivery:
+          <span style="font-weight: 100" id="place_of_delivery"></span>
+        </p>
+      </div>
+      <div class="shipping-details">
+        <h3>Shipping Address:</h3>
+        <p><span id="billing_name"></span></p>
+        <p id="billing_address"></p>
+      </div>
+      <div class="invoice-info">
+        <p style="font-weight: bold">
+          Invoice Number: <span style="font-weight: 100" id="invoice_no"></span>
+        </p>
+        <p style="font-weight: bold">
+          Invoice Date: <span style="font-weight: 100" id="invoice_date"></span>
+        </p>
+        <p hidden>Order Number: <span id="order_no"></span></p>
+        <p hidden>Order Date: <span id="order_date"></span></p>
+      </div>
+      <div class="items-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Sl. No.</th>
+              <th>Description</th>
+              <th>Unit Price</th>
+              <th>Qty</th>
+              <th>Net Amount</th>
+              <th>Tax Rate</th>
+              <th>Tax Type</th>
+              <th>Tax Amount</th>
+              <th>Total Amount</th>
+            </tr>
+          </thead>
+          <tbody id="items"></tbody>
+        </table>
+      </div>
+      <div class="total">
+        <p style="font-weight: bold">
+          Total Amount: <span id="total_amount"></span>
+        </p>
+        <p style="font-weight: bold">
+          Amount in Words: <span id="total_amount_words"></span>
+        </p>
+      </div>
+      <div class="footer">
+        <p>For <span id="seller_name_footer"></span></p>
+        <p style="font-weight: bold">Authorized Signatory:</p>
+      </div>
+      <button class="no-print downloadBtn" onclick="window.print()">
+        Download Invoice
+      </button>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const invoiceData = JSON.parse(localStorage.getItem("invoiceData"));
+
+        document.getElementById("company_logo").src = invoiceData.company_logo;
+        document.getElementById("seller_name").textContent =
+          invoiceData.seller_name;
+        document.getElementById("seller_address").textContent =
+          invoiceData.seller_address;
+        document.getElementById("seller_pan").textContent =
+          invoiceData.seller_pan;
+        document.getElementById("seller_gst").textContent =
+          invoiceData.seller_gst;
+        document.getElementById("billing_name").textContent =
+          invoiceData.billing_name;
+        document.getElementById("billing_address").textContent =
+          invoiceData.billing_address;
+        document.getElementById("place_of_supply").textContent =
+          invoiceData.place_of_supply;
+        document.getElementById("place_of_delivery").textContent =
+          invoiceData.place_of_delivery;
+        document.getElementById("invoice_no").textContent =
+          invoiceData.invoice_no;
+        document.getElementById("invoice_date").textContent =
+          invoiceData.invoice_date;
+        document.getElementById("order_no").textContent =
+          invoiceData.order_no || "N/A";
+        document.getElementById("order_date").textContent =
+          invoiceData.order_date || "N/A";
+
+        const itemsTable = document.getElementById("items");
+        invoiceData.items.forEach((item, index) => {
+          const row = `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.description}</td>
+                        <td>${item.unit_price.toFixed(2)}</td>
+                        <td>${item.quantity}</td>
+                        <td>${item.net_amount.toFixed(2)}</td>
+                        <td>18%</td>
+                        <td>${item.cgst ? "CGST/SGST" : "IGST"}</td>
+                        <td>${item.tax_amount.toFixed(2)}</td>
+                        <td>${item.total_amount.toFixed(2)}</td>
+                    </tr>
+                `;
+          itemsTable.insertAdjacentHTML("beforeend", row);
+        });
+
+        document.getElementById("total_amount").textContent =
+          invoiceData.total_amount.toFixed(2);
+        document.getElementById("total_amount_words").textContent =
+          invoiceData.total_amount_words;
+        document.getElementById("seller_name_footer").textContent =
+          invoiceData.seller_name;
+      });
+    </script>
+  </body>
+</html>
