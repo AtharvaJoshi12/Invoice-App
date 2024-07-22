@@ -22,8 +22,8 @@ The Invoice Creation Program is a web application designed to simplify the proce
 1. **Clone the Repository**:
 
    ```bash
-   git clone https://github.com/yourusername/invoice-creation-program.git
-   cd invoice-creation-program
+   git clone https://github.com/AtharvaJoshi12/Invoice-App
+   cd Invoice-App
    ```
 
 2. **Open `index.html`**: You can open the `index.html` file in your browser to start using the application.
